@@ -1,9 +1,18 @@
 import { Suspense } from "react";
-import { Count } from "./atoms";
+import { Count, incAtom } from "./atoms";
 import { ReloadBtn } from "./Refresh";
+import { waiting } from "../atoms/waiting";
+import { atom, useAtomValue } from "jotai";
+
+const showWhenFive = atom((get) => {
+  return get(incAtom, {
+    unstable_promise: true,
+  });
+});
 
 const Inner = () => {
-  return <></>;
+  const showed = useAtomValue(showWhenFive);
+  return <>{showed}</>;
 };
 
 export const Wait = () => {

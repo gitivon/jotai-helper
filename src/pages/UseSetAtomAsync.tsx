@@ -3,21 +3,16 @@ import { useCallback } from "react";
 import { useSetAtomAsync } from "../hooks/useSetAtomAsync";
 import { Count, incAtom } from "./atoms";
 
-console.log("UseSetAtomAsync.tsx:3", incAtom);
-
-const testAtom = atom(0);
-
 export const UseSetAtomAsync = () => {
-  const refetch = useSetAtomAsync(testAtom);
-  console.log("UseSetAtomAsync.tsx:5", refetch);
+  const refetch = useSetAtomAsync(incAtom);
   return (
     <>
       <Count />
       <button
         onClick={async () => {
           console.log("UseSetAtomAsync.tsx:11", "refetch start");
-          await refetch(2);
-          console.log("UseSetAtomAsync.tsx:11", "refetch end");
+          const newCount = await refetch();
+          console.log("UseSetAtomAsync.tsx:11", "refetch end", newCount);
         }}
       >
         点我异步inc

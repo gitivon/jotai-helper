@@ -1,6 +1,6 @@
 import { atom, Getter } from "jotai";
 
-const atomWithCondition = (option: (get: Getter) => [any, boolean]) => {
+export const waiting = (option: (get: Getter) => [any, boolean]) => {
   return atom((get) => {
     const [fn, ready] = option(get);
     if (!ready) {

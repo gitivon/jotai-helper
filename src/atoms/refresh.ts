@@ -9,7 +9,7 @@ export const refresh = <T>(readableAtom: Atom<T>) => {
   return atom(
     (get) => {
       get(refreshAtom);
-      return readableAtom.read(get);
+      return readableAtom.read(get) as Awaited<T>;
     },
     (_get, set) => {
       set(refreshAtom, (i) => i + 1);

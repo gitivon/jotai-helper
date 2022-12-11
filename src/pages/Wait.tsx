@@ -1,21 +1,45 @@
-import { Suspense } from "react";
+import { atom, useAtomValue } from "jotai";
+import { loadable } from "jotai/utils";
+import { FC, Suspense } from "react";
+import { atomWithDeferred } from "../atomCreators/atomWithDeferred";
+import { Deferred } from "../atoms/waiting";
 import { Count, incAtom } from "./atoms";
 import { ReloadBtn } from "./Refresh";
-import { waiting } from "../atoms/waiting";
-import { atom, useAtomValue } from "jotai";
 
-const showWhenFive = atom((get) => {
-  return get(incAtom, {
-    unstable_promise: true,
-  });
+let dfd: Deferred<void>;
+
+const showedAtom = atom((get) => {
+  const inc = get(incAtom);
+  console.log("Wait.tsx:20", inc);
+  if (inc <= 1) {
+    dfd = new Deferred();
+    throw dfd.promise;
+  }
+  dfd.resolve();
+  return inc;
 });
 
-const Inner = () => {
-  const showed = useAtomValue(showWhenFive);
-  return <>{showed}</>;
+const dfdAtom = atomWithDeferred();
+
+const vAtom = atom((get) => {
+  const inc = get(incAtom);
+  const p = get(dfdAtom);
+  console.log("Wait.tsx:27", inc);
+  if (inc < 1) {
+    throw p;
+  }
+  return inc;
+});
+
+const Inner: FC = () => {
+  const showed = useAtomValue(showedAtom);
+  return <div>showed: {JSON.stringify(showed)}</div>;
 };
 
+const l = loadable(incAtom);
+
 export const Wait = () => {
+  useAtomValue(l);
   return (
     <>
       <Suspense fallback="waiting...">

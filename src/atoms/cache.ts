@@ -23,7 +23,6 @@ export function cache<T>(baseAtom: Atom<T>, initialValue?: Awaited<T>) {
     (get) => {
       const current = get(refreshAtom);
       const load = get(loadableBaseAtom);
-      console.log("cache.ts:25", cached);
       if (load.state !== "hasData") {
         return cached !== NULL ? cached : get(baseAtom);
       }
@@ -31,7 +30,6 @@ export function cache<T>(baseAtom: Atom<T>, initialValue?: Awaited<T>) {
         lastRefresh = undefined;
         return cached !== NULL ? cached : get(baseAtom);
       }
-      console.log("cache.ts:33", lastRefresh, current);
       cached = load.data as T;
       lastRefresh = current;
       return cached;

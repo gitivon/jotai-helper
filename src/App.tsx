@@ -1,7 +1,10 @@
 import { Suspense } from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { Broadcast } from "./pages/Broadcast";
 import { Cache } from "./pages/Cache";
+import { Listener } from "./pages/Listener";
 import { Loop } from "./pages/Loop";
+import { Promisable } from "./pages/Promise";
 import { Refresh } from "./pages/Refresh";
 import { UseSetAtomAsync } from "./pages/UseSetAtomAsync";
 import { Wait } from "./pages/Wait";
@@ -22,6 +25,18 @@ const routes = [
   {
     path: "/wait",
     element: <Wait />,
+  },
+  {
+    path: '/listener',
+    element: <Listener />,
+  },
+  {
+    path: '/broadcast',
+    element: <Broadcast />,
+  },
+  {
+    path: '/promise',
+    element: <Promisable />,
   },
   {
     path: "/use-set-atom-async",

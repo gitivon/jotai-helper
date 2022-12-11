@@ -1,7 +1,7 @@
 {
-  "name": "jotai2",
+  "name": "@gitivon/jotai-helper",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -20,5 +20,20 @@
     "@vitejs/plugin-react": "^2.2.0",
     "typescript": "^4.6.4",
     "vite": "^3.2.3"
-  }
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitivon/jotai-helper.git"
+  },
+  "keywords": [
+    "jotai"
+  ],
+  "author": "ivon.hua",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gitivon/jotai-helper/issues"
+  },
+  "homepage": "https://github.com/gitivon/jotai-helper#readme",
+  "description": ""
 }

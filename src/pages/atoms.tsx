@@ -28,3 +28,27 @@ export const userAtom = refresh(
     return response.json();
   })
 );
+
+export const localUserAtom = refresh(
+  abortableAtom(async (get, { signal }) => {
+    const userId = get(incAtom);
+    console.log("atoms.tsx:34", userId);
+    await timeout(2000);
+    return {
+      userId,
+      name: "用户名",
+    };
+  })
+);
+
+export const localUserDetailAtom = refresh(
+  atom(async (get) => {
+    const user = get(localUserAtom);
+    console.log("atoms.tsx:45", user);
+    await timeout(2e3);
+    return {
+      user,
+      detail: "很好",
+    };
+  })
+);

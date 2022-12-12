@@ -19,18 +19,6 @@ const showedAtom = atom((get) => {
   return inc;
 });
 
-const dfdAtom = atomWithDeferred();
-
-const vAtom = atom((get) => {
-  const inc = get(incAtom);
-  const p = get(dfdAtom);
-  console.log("Wait.tsx:27", inc);
-  if (inc < 1) {
-    throw p;
-  }
-  return inc;
-});
-
 const Inner: FC = () => {
   const showed = useAtomValue(showedAtom);
   return <div>showed: {JSON.stringify(showed)}</div>;

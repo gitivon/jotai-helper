@@ -36,6 +36,11 @@
       "name": "刘备"
     }
   },
+  "user/0": null,
+  "user/1": {
+    "id": 1,
+    "name": "吕布"
+  },
   "profile": {
     "name": "typicode"
   }

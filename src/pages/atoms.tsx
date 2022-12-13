@@ -22,7 +22,7 @@ export const userAtom = refresh(
   abortableAtom(async (get, { signal }) => {
     const userId = get(incAtom);
     const response = await fetch(
-      `https://my-json-server.typicode.com/gitivon/jotai-helper/users`,
+      `https://my-json-server.typicode.com/gitivon/jotai-helper/user/${userId}`,
       { signal }
     );
     return response.json();

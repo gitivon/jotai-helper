@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { createElement, Suspense } from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { Broadcast } from "./pages/Broadcast";
 import { Cache } from "./pages/Cache";
@@ -6,42 +6,20 @@ import { Listener } from "./pages/Listener";
 import { Loop } from "./pages/Loop";
 import { Promisable } from "./pages/Promise";
 import { Refresh } from "./pages/Refresh";
+import { Test } from "./pages/Test";
 import { UseSetAtomAsync } from "./pages/UseSetAtomAsync";
 import { Wait } from "./pages/Wait";
 
-const routes = [
-  {
-    path: "/refresh",
-    element: <Refresh />,
-  },
-  {
-    path: "/loop",
-    element: <Loop />,
-  },
-  {
-    path: "/cache",
-    element: <Cache />,
-  },
-  {
-    path: "/wait",
-    element: <Wait />,
-  },
-  {
-    path: '/listener',
-    element: <Listener />,
-  },
-  {
-    path: '/broadcast',
-    element: <Broadcast />,
-  },
-  {
-    path: '/promise',
-    element: <Promisable />,
-  },
-  {
-    path: "/use-set-atom-async",
-    element: <UseSetAtomAsync />,
-  },
+const RouteComponents = [
+  Refresh,
+  Loop,
+  Cache,
+  Wait,
+  Listener,
+  Broadcast,
+  Promisable,
+  UseSetAtomAsync,
+  Test,
 ];
 
 function App() {
@@ -60,20 +38,20 @@ function App() {
             fontSize: 20,
           }}
         >
-          {routes.map((route) => {
+          {RouteComponents.map((component, index) => {
             return (
               <div
-                key={route.path}
+                key={index}
                 style={{
                   margin: "5px 0",
                 }}
               >
                 <Link
                   to={{
-                    pathname: route.path,
+                    pathname: component.name,
                   }}
                 >
-                  {route.path}
+                  {component.name}
                 </Link>
               </div>
             );
@@ -90,8 +68,12 @@ function App() {
         >
           <Suspense fallback="page is suspense ing">
             <Routes>
-              {routes.map((route) => (
-                <Route {...route} key={route.path} />
+              {RouteComponents.map((component) => (
+                <Route
+                  key={component.name}
+                  path={component.name}
+                  element={createElement(component)}
+                />
               ))}
             </Routes>
           </Suspense>

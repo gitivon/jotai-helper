@@ -4,6 +4,7 @@ import { Broadcast } from "./pages/Broadcast";
 import { Cache } from "./pages/Cache";
 import { Listener } from "./pages/Listener";
 import { Loop } from "./pages/Loop";
+import { OnMount } from "./pages/OnMount";
 import { Promisable } from "./pages/Promise";
 import { Refresh } from "./pages/Refresh";
 import { Test } from "./pages/Test";
@@ -19,6 +20,7 @@ const RouteComponents = [
   Broadcast,
   Promisable,
   UseSetAtomAsync,
+  OnMount,
   Test,
 ];
 

@@ -6,13 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs"
   },
   "dependencies": {
     "jotai": "^1.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.4"
+    "react-error-boundary": "^3.1.4",
+    "react-router-dom": "^6.4.4",
+    "vitepress": "^1.0.0-alpha.31",
+    "vue": "^3.2.45"
   },
   "devDependencies": {
     "@types/react": "^18.0.24",

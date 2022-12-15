@@ -1,0 +1,137 @@
+# 从 TS 类型来学习 jotai
+
+jotai 的 api 很少，从 ts 类型描述来作为切入点也是一个不错的方向。
+
+## Getter
+
+```ts
+type Getter = {
+  <Value>(atom: Atom<Value | Promise<Value>>): Value;
+  <Value>(atom: Atom<Promise<Value>>): Value;
+  <Value>(atom: Atom<Value>): Awaited<Value>;
+};
+```
+
+get 方法接受一个 atom 作为入参，三个重载可以总结成同一个效果：将 atom 进行 promise 解包
+
+## WriteGetter
+
+```ts
+type WriteGetter = Getter & {
+  <Value>(
+    atom: Atom<Value | Promise<Value>>,
+    options: {
+      unstable_promise: true;
+    }
+  ): Promise<Value> | Value;
+  <Value>(
+    atom: Atom<Promise<Value>>,
+    options: {
+      unstable_promise: true;
+    }
+  ): Promise<Value> | Value;
+  <Value>(
+    atom: Atom<Value>,
+    options: {
+      unstable_promise: true;
+    }
+  ): Promise<Awaited<Value>> | Awaited<Value>;
+};
+```
+
+在普通的 get 基础上，第二个参数传入 { unstable_promise: true } 的话，则不会对 promise 结果解包，而是得到一个 promise 状态，一般用法：
+
+```ts
+const writableAtom = atom(() => null, (get, set) => {
+  return get(asyncAtom, {
+    unstable_promise: true;
+  })
+})
+```
+
+## Setter
+
+```ts
+type Setter = {
+  <Value, Result extends void | Promise<void>>(
+    atom: WritableAtom<Value, undefined, Result>
+  ): Result;
+  <Value, Update, Result extends void | Promise<void>>(
+    atom: WritableAtom<Value, Update, Result>,
+    update: Update
+  ): Result;
+};
+```
+
+- Value atom 中的值类型
+- Update setAtom 给的新值类型
+- Result setAtom 返回类型
+
+## WritableAtom
+
+```ts
+export interface WritableAtom<
+  Value,
+  Update,
+  Result extends void | Promise<void> = void
+> extends Atom<Value> {
+  write: Write<Update, Result>;
+  onMount?: OnMount<Update, Result>;
+}
+```
+
+从上面可以得知 writableAtom 额外多了两个属性，write 和 onMount
+
+write 记录了该 atom 的写方法，而 onMount 是可以在 atom 初次被挂载时触发
+
+### onMount
+
+unmount 会在所有读取此 atom 的组件被卸载后触发，要注意的是，如果有 suspense 则在 suspense 完毕之后才触发
+
+> 请保持 get 是纯函数，严格模式下可能会多次执行，同理，get 其他 atom 建议放在最前面，调用接口等操作放到最后面
+
+## Atom
+
+atom 有五个重载，也就是说他有 4 个不同的用法
+
+```ts
+function atom<Value, Update, Result extends void | Promise<void> = void>(
+  read: Read<Value>,
+  write: Write<Update, Result>
+): WritableAtom<Value, Update, Result>;
+
+type Read<Value> = (get: Getter) => Value;
+```
+
+定义一个普通的可读写 atom，注意读的部分是一个函数来进行定义的
+
+```ts
+function atom<Value>(read: Read<Value>): Atom<Value>;
+```
+
+定义一个只读的 atom
+
+```ts
+function atom(invalidFunction: (...args: any) => any, write?: any): never;
+```
+
+这是一种错误的定义方法，这个定义只是用来辅助提醒用的
+
+```ts
+function atom<Value, Update, Result extends void | Promise<void> = void>(
+  initialValue: Value,
+  write: Write<Update, Result>
+): WritableAtom<Value, Update, Result> & WithInitialValue<Value>;
+```
+
+定义一个带有初始值的读写 atom
+
+```ts
+function atom<Value>(
+  initialValue: Value
+): PrimitiveAtom<Value> & WithInitialValue<Value>;
+
+type PrimitiveAtom<Value> = WritableAtom<Value, SetStateAction<Value>>;
+```
+
+最基本的定义一个原始 atom，这种 atom 可以通过 `setAtom(prevState => nextState)`来更新值

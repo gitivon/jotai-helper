@@ -11,8 +11,8 @@ const DebugAtoms = () => {
 };
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <DebugAtoms />
-    <App />
-  </React.StrictMode>
+  // <React.StrictMode>
+  //   <DebugAtoms />
+  <App />
+  // </React.StrictMode>
 );

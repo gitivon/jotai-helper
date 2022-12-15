@@ -1,7 +1,19 @@
-import { useAtomValue } from "jotai";
-import { userAtom } from "./atoms";
+import { atom, useAtomValue } from "jotai";
+import { Count, postAtom } from "./atoms";
+import { ReloadBtn } from "./Refresh";
+
+const derivedAtom = atom((get) => {
+  const post = get(postAtom);
+  return post;
+});
 
 export const Test = () => {
-  const user = useAtomValue(userAtom);
-  return <>{JSON.stringify(user)}</>;
+  const post = useAtomValue(derivedAtom);
+  return (
+    <>
+      <p>{JSON.stringify(post)}</p>
+      <Count />
+      <ReloadBtn />
+    </>
+  );
 };

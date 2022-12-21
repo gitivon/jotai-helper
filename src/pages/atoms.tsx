@@ -1,19 +1,23 @@
 import { atom, useAtomValue } from "jotai";
-import { abortableAtom } from "jotai/utils";
-import { atomWithRefresh, refresh } from "../atoms/refresh";
+import { abortableAtom, loadable, selectAtom } from "jotai/utils";
+import { refresh } from "../atoms/refresh";
+import { select } from "../atoms/select";
 import { withSuspense } from "../utils/withSuspense";
 
 export const timeout = (t: number) => new Promise((r) => setTimeout(r, t));
 
 export const countAtom = atom(0);
 
+export const baseIncAtom = refresh(
+  atom(async () => {
+    await timeout(1e3);
+    return count++;
+  })
+);
 let count = 0;
-export const incAtom = atomWithRefresh(async () => {
-  console.log("incAtom start...");
-  await timeout(4e3);
-  console.log("incAtom end");
-  return count++;
-});
+
+export const incAtom = select(baseIncAtom, (v) => v.data);
+export const incLoadingAtom = select(baseIncAtom, (v) => v.isLoading);
 
 export const Count = withSuspense(() => {
   return <>count：{useAtomValue(incAtom)}</>;

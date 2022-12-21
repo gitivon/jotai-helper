@@ -1,29 +1,35 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Suspense, useState } from "react";
-import { useCallback } from "react";
-import { withSuspense } from "../utils/withSuspense";
-import { incAtom, userAtom } from "./atoms";
+import { Suspense } from "react";
+import { TransitionAction } from "../atoms/refresh";
+import { incAtom, incLoadingAtom, userAtom } from "./atoms";
 
-export const Refresh = withSuspense(() => {
-  const count = useAtomValue(incAtom);
+export const Refresh = () => {
+  const [count, refresh] = useAtom(incAtom);
+  const loading = useAtomValue(incLoadingAtom);
+  console.log("Refresh.tsx:7", "render", count);
   return (
     <>
-      count: {count}
+      <p>count: {count}</p>
+      <p>loading: {JSON.stringify(loading)}</p>
       <ReloadBtn />
-      <Suspense fallback="loading...">
-        <User />
-      </Suspense>
+      <button
+        onClick={() => {
+          refresh({ type: "transition" });
+        }}
+      >
+        silenceRefresh
+      </button>
     </>
   );
-});
+};
 
 const User = () => {
   const [user, setUser] = useAtom(userAtom);
   return <>{JSON.stringify(user)}</>;
 };
 
-export const ReloadBtn = () => {
+export const ReloadBtn = (action: TransitionAction) => {
   const refresh = useSetAtom(incAtom);
 
-  return <button onClick={refresh}>reload incAtom</button>;
+  return <button onClick={() => refresh(action)}>reload incAtom</button>;
 };

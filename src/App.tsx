@@ -38,6 +38,7 @@ function App() {
           style={{
             flex: "0 0 300px",
             fontSize: 20,
+            color: "white",
           }}
         >
           {RouteComponents.map((component, index) => {
@@ -51,6 +52,9 @@ function App() {
                 <Link
                   to={{
                     pathname: component.name,
+                  }}
+                  style={{
+                    color: "white",
                   }}
                 >
                   {component.name}

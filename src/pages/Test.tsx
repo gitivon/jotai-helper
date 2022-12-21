@@ -9,11 +9,12 @@ const derivedAtom = atom((get) => {
 
 export const Test = () => {
   const post = useAtomValue(derivedAtom);
+  console.log("Test.tsx:11", "render");
   return (
     <>
       <p>{JSON.stringify(post)}</p>
       <Count />
-      <ReloadBtn />
+      <ReloadBtn type="transition" />
     </>
   );
 };
